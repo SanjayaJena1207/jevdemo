@@ -1,16 +1,35 @@
-<<<<<<< HEAD
-# jevdemo
-System One Model - Jev
-=======
 # 🏁 LLM Grand Prix
 
-A car-racing benchmark for LLMs. Each model is a car in its own lane. When you press **Start Race**, the backend sends the same random **multiple-choice** (A–D) math or trivia question to every model at once over streaming chat completions.
+A car-racing benchmark for LLMs, built to put **Jev**, TypeSafe's "System One" decision model, head to head with chat LLMs. Each model is a car in its own lane. When you press **Start Race**, the backend sends the same random **multiple-choice** (A–D) math or trivia question to every model at once over streaming chat completions.
 
 - Cars move forward as tokens stream in. Reasoning/"thinking" tokens count too.
 - A car crosses the finish line when its response completes with a **correct** answer.
 - **Wrong answer** → the car crashes 💥 just short of the line.
 - **Error / timeout / unreachable / missing key** → the car stalls 🛑 where it is. The other cars keep racing.
 - The **first correct finisher wins**.
+
+## Demo
+
+▶️ **[Watch 3 recorded races (MP4, 50s)](docs/demo/race-demo.mp4)**. This is an unedited screen recording of the live app with real API calls, made on 2026-09-27.
+
+[![Race 1 result](docs/demo/race-1.png)](docs/demo/race-demo.mp4)
+
+Results from the recording (time = request sent → answer complete):
+
+| # | Question | Correct | Winner | Jev 1.13 | GPT-OSS 120B | Gemini 2.5 Flash | Qwen3.8 Flash | Llama 3.2 3B |
+|---|---|---|---|---|---|---|---|---|
+| 1 | How many continents are there on Earth? | A) 7 | 🏆 Jev 1.13 | ✅ 1.35s | ✅ 1.97s | ✅ 2.33s | ✅ 4.30s | ✅ 9.25s |
+| 2 | What is the chemical symbol for gold? | A) Au | 🏆 Jev 1.13 | ✅ 1.29s | ✅ 1.74s | ✅ 1.74s | ✅ 2.55s | ✅ 4.30s |
+| 3 | What is the smallest prime number? | D) 2 | 🏆 Jev 1.13 | ✅ 0.86s | ✅ 1.35s | ✅ 2.62s | ✅ 2.95s | ✅ 4.62s |
+
+All three questions happened to be trivia, where Jev scored 12/12 in separate testing. On arithmetic it's weaker (13/16) because it estimates rather than calculates, so near-miss options can trip it up.
+
+Evidence files: [screenshots](docs/demo/) (`race-1.png` to `race-3.png`) and raw per-model results as streamed by the backend ([`races.json`](docs/demo/races.json)). To re-record, start both servers and run:
+
+```powershell
+pip install playwright imageio-ffmpeg
+python tools/record_demo.py --races 3
+```
 
 ### Why multiple choice? (Jev)
 
@@ -129,4 +148,3 @@ All racers live in this one file. Each entry is an OpenAI-compatible endpoint:
 | GET | `/api/verify-models` | Check model IDs against providers' `/models` |
 
 Scoreboard and price overrides are stored in `backend/data/`. Delete that folder to start fresh.
->>>>>>> 5a83a29 (adding jevdemo project initial setup)
